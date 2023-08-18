@@ -1,15 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom";
+import Pet from "./Pet";
 
-// using props like self in python for data
-// props for property
-const Pet = (props) => {
-  return React.createElement("div", {}, [
-    React.createElement("h1", {}, props.name),
-    React.createElement("h2", {}, props.animal),
-    React.createElement("h2", {}, props.breed),
-  ]);
-};
 
 const App = () => {
   return React.createElement("div", {}, [
