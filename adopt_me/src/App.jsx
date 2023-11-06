@@ -7,6 +7,7 @@ const App = () => {
     <div>
       <h1>Adopt Me!</h1>
       <SearchParams />
+      
     </div>
   );
 };
