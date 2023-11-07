@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import Pet from './Pet';
+import useBreedList from './useBreedList';
 
 const ANIMAL = ['birds', 'cat', 'dog', 'rabbit', 'retptile']
 
@@ -9,6 +10,7 @@ const SearchParams = () => {
   const [animal, setAnimal] = useState('');
   const [breed, setBreed] = useState('');
   const [pets, setPets] = useState([]);
+  const [breeds] = useBreedList(animal)
 
   useEffect(() => {
     requestPets();
@@ -24,7 +26,7 @@ const SearchParams = () => {
     setPets(json.pets)
   }
 
-  const breeds = [];
+  // const breeds = [];
 
 
   return (
