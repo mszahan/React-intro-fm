@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line import/no-unresolved
-import Pet from './Pet';
 import useBreedList from './useBreedList';
+// eslint-disable-next-line import/no-unresolved
+import Results from './Results';
 
 const ANIMAL = ['birds', 'cat', 'dog', 'rabbit', 'retptile']
 
@@ -88,14 +88,15 @@ const SearchParams = () => {
 
         <button>Submit</button>
       </form>
+      <Results pets={pets}/>
 
-      {pets.map((pet) => (
+      {/* {pets.map((pet) => (
         <Pet 
         name={pet.name}
         animal={pet.animal}
         breed={pet.breed}
         key={pet.id}/>
-      ))}
+      ))} */}
 
 
     </div>
