@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from "@tanstack/react-query";
+
+import fetchSearch from "./fetchSearch";
 import useBreedList from './useBreedList';
 // eslint-disable-next-line import/no-unresolved
 import Results from './Results';
@@ -6,43 +9,37 @@ import Results from './Results';
 const ANIMAL = ['birds', 'cat', 'dog', 'rabbit', 'retptile']
 
 const SearchParams = () => {
-  const [location, setLocation] = useState('');
+  const [requestParams, setRequestParams] = useState({
+    location: "",
+    animal: "",
+    breed: "",
+  });
   const [animal, setAnimal] = useState('');
-  const [breed, setBreed] = useState('');
-  const [pets, setPets] = useState([]);
   const [breeds] = useBreedList(animal)
 
-  useEffect(() => {
-    requestPets();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  // that empty array is preventing the repeatation of the effect
+  const results = useQuery(['search', requestParams], fetchSearch);
+  const pets = results?.data?.pets ?? [];
 
-  async function requestPets(){
-    const res = await fetch(
-      `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breeds}`
-    );
-    const json = await res.json();
-    setPets(json.pets)
-  }
-
-  // const breeds = [];
 
 
   return (
     <div className="search-params">
       <form onSubmit={e =>{
         e.preventDefault();
-        requestPets();
+        const formData = new FormData(e.target);
+        const obj = {
+          animal: formData.get("animal") ?? "",
+          breed: formData.get("breed") ?? "",
+          location: formData.get("location") ?? "",
+        };
+        setRequestParams(obj)
       }}>
         <label htmlFor="location">
           Location
           <input
             type="text"
-            onChange={(e) => setLocation(e.target.value)}
             name="location"
             id="location"
-            value={location}
             placeholder="Location"
           />
         </label>
@@ -51,11 +48,14 @@ const SearchParams = () => {
           Animal
           <select 
           id='animal'
-          value={animal}
-          onChange={e => {
+          name='animal'
+          onChange={(e) => {
             setAnimal(e.target.value);
-            setBreed('')
-          }}>
+          }}
+          onBlur={(e) => {
+            setAnimal(e.target.value);
+          }}
+         >
 
             <option/>
             {/* here in arrow funtion the parenthesis instead of curly braces
@@ -71,14 +71,13 @@ const SearchParams = () => {
         <label htmlFor='breed'>
           Breed
           <select id='breed'
-          value={breed}
-          onChange={e => setBreed(e.target.value)}
+          name='breed'
           disabled={breeds.length === 0}
           >
             <option/>
 
             {breeds.map(breed =>(
-              <option key={breed}> {breed} </option>
+              <option key={breed} value={breed}> {breed} </option>
             ))}
 
           </select>
@@ -89,14 +88,6 @@ const SearchParams = () => {
         <button>Submit</button>
       </form>
       <Results pets={pets}/>
-
-      {/* {pets.map((pet) => (
-        <Pet 
-        name={pet.name}
-        animal={pet.animal}
-        breed={pet.breed}
-        key={pet.id}/>
-      ))} */}
 
 
     </div>
