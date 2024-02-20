@@ -1,11 +1,13 @@
 // import React from "react";
 import { createRoot } from 'react-dom/client';
-import { useState, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Link, BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Provider } from 'react-redux';
+import store from './store';
 import './index.css';
-import AdoptedPetContext from './AdoptedPetContext';
-import { Pet } from './APIResponsesTypes';
+// import AdoptedPetContext from './AdoptedPetContext';
+// import { Pet } from './APIResponsesTypes';
 
 // import SearchParams from './SearchParams.jsx';
 // import Details from './Details.jsx';
@@ -23,7 +25,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const adoptedPet = useState(null as Pet | null);
+  // const adoptedPet = useState(null as Pet | null);
   return (
     <div
       className="p-0 m-0"
@@ -40,7 +42,7 @@ const App = () => {
               </div>
             }
           >
-            <AdoptedPetContext.Provider value={adoptedPet}>
+            <Provider store={store}>
               <header className="w-full mb-10 text-center p-7">
                 <Link
                   className="text-6xl text-slate-800 hover:text-gray-500"
@@ -53,7 +55,7 @@ const App = () => {
                 <Route path="details/:id" element={<Details />} />
                 <Route path="/" element={<SearchParams />} />
               </Routes>
-            </AdoptedPetContext.Provider>
+            </Provider>
           </Suspense>
         </QueryClientProvider>
       </BrowserRouter>
