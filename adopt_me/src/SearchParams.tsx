@@ -1,6 +1,7 @@
 import { useState, useDeferredValue, useMemo, useTransition } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
+import { all } from './searchParamSlice';
 
 // import AdoptedPetContext from './AdoptedPetContext';
 import fetchSearch from './fetchSearch';
@@ -12,18 +13,20 @@ import { Animal } from './APIResponsesTypes';
 const ANIMAL: Animal[] = ['bird', 'cat', 'dog', 'rabbit', 'reptile'];
 
 const SearchParams = () => {
-  const [requestParams, setRequestParams] = useState({
-    location: '',
-    animal: '' as Animal,
-    breed: '',
-  });
+  // const [requestParams, setRequestParams] = useState({
+  //   location: '',
+  //   animal: '' as Animal,
+  //   breed: '',
+  // });
   const [animal, setAnimal] = useState('' as Animal);
   const [breeds] = useBreedList(animal);
+  const dispatch = useDispatch();
   // const [adoptedPet] = useContext(AdoptedPetContext);
   const adoptedPet = useSelector((state) => state.adoptedPet.value);
+  const searchParams = useSelector((state) => state.searchParams.value);
   const [isPending, startTransition] = useTransition();
 
-  const results = useQuery(['search', requestParams], fetchSearch);
+  const results = useQuery(['search', searchParams], fetchSearch);
   const pets = results?.data?.pets ?? [];
 
   const deferredPets = useDeferredValue(pets);
@@ -47,7 +50,7 @@ const SearchParams = () => {
             location: formData.get('location')?.toString() ?? '',
           };
           startTransition(() => {
-            setRequestParams(obj);
+            dispatch(all(obj));
           });
           // setRequestParams(obj);
         }}
