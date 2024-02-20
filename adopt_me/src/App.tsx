@@ -5,6 +5,7 @@ import { Routes, Route, Link, BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import AdoptedPetContext from './AdoptedPetContext';
+import { Pet } from './APIResponsesTypes';
 
 // import SearchParams from './SearchParams.jsx';
 // import Details from './Details.jsx';
@@ -22,7 +23,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const adoptedPet = useState(null);
+  const adoptedPet = useState(null as Pet | null);
   return (
     <div
       className="p-0 m-0"
@@ -31,32 +32,30 @@ const App = () => {
       }}
     >
       <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <Suspense
-          fallback={
-            <div className="loading-pane">
-              <h2 className="loader"> 🛞 </h2>
-            </div>
-          }
-        >
-          
-
-          <AdoptedPetContext.Provider value={adoptedPet}>
-            <header className="w-full mb-10 text-center p-7">
-              <Link
-                className="text-6xl text-slate-800 hover:text-gray-500"
-                to="/"
-              >
-                Adopt Me!
-              </Link>
-            </header>
-            <Routes>
-              <Route path="details/:id" element={<Details />} />
-              <Route path="/" element={<SearchParams />} />
-            </Routes>
-          </AdoptedPetContext.Provider>
-        </Suspense>
-      </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <Suspense
+            fallback={
+              <div className="loading-pane">
+                <h2 className="loader"> 🛞 </h2>
+              </div>
+            }
+          >
+            <AdoptedPetContext.Provider value={adoptedPet}>
+              <header className="w-full mb-10 text-center p-7">
+                <Link
+                  className="text-6xl text-slate-800 hover:text-gray-500"
+                  to="/"
+                >
+                  Adopt Me!
+                </Link>
+              </header>
+              <Routes>
+                <Route path="details/:id" element={<Details />} />
+                <Route path="/" element={<SearchParams />} />
+              </Routes>
+            </AdoptedPetContext.Provider>
+          </Suspense>
+        </QueryClientProvider>
       </BrowserRouter>
     </div>
   );
@@ -84,6 +83,10 @@ const App = () => {
 // };
 
 const container = document.getElementById('root');
+
+if (!container) {
+  throw new Error('no container found');
+}
 const root = createRoot(container);
 root.render(<App />);
 

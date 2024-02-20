@@ -1,7 +1,9 @@
 import { createContext } from 'react';
 import { Pet } from './APIResponsesTypes';
 
-const AdoptedPetContext = createContext<[Pet, (adoptedPet: Pet) => void]>([
+const AdoptedPetContext = createContext<
+  [Pet | null, (adoptedPet: Pet) => void]
+>([
   // if you don't provide this you will have to pass null value
   {
     id: 1337,
