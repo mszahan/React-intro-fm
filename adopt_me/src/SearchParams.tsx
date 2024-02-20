@@ -1,14 +1,8 @@
-import {
-  useState,
-  useContext,
-  useDeferredValue,
-  useMemo,
-  useTransition,
-} from 'react';
-
+import { useState, useDeferredValue, useMemo, useTransition } from 'react';
+import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
 
-import AdoptedPetContext from './AdoptedPetContext';
+// import AdoptedPetContext from './AdoptedPetContext';
 import fetchSearch from './fetchSearch';
 import useBreedList from './useBreedList';
 // eslint-disable-next-line import/no-unresolved
@@ -25,7 +19,8 @@ const SearchParams = () => {
   });
   const [animal, setAnimal] = useState('' as Animal);
   const [breeds] = useBreedList(animal);
-  const [adoptedPet] = useContext(AdoptedPetContext);
+  // const [adoptedPet] = useContext(AdoptedPetContext);
+  const adoptedPet = useSelector((state) => state.adoptedPet.value);
   const [isPending, startTransition] = useTransition();
 
   const results = useQuery(['search', requestParams], fetchSearch);
