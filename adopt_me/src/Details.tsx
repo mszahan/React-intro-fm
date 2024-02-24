@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query';
 // import AdoptedPetContext from './AdoptedPetContext';
 import { useDispatch } from 'react-redux';
+
+import { useGetPetQuery } from './petApiService';
 import { adopt } from './AdoptedPetSlice';
 import fetchPet from './fetchPet';
 import Carousel from './Carousel';
@@ -23,10 +25,12 @@ const Details = () => {
   // // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const [_, setAdoptedPet] = useContext(AdoptedPetContext);
 
-  const dispatch = useDispatch();
-  const results = useQuery(['details', id], fetchPet);
+  const { isLoading, data: pet } = useGetPetQuery(id);
 
-  if (results.isLoading) {
+  const dispatch = useDispatch();
+  // const results = useQuery(['details', id], fetchPet);
+
+  if (isLoading) {
     return (
       <div className="loading-pane">
         <h2 className="loader">🐿️</h2>
@@ -34,7 +38,7 @@ const Details = () => {
     );
   }
 
-  const pet = results?.data?.pets[0];
+  // const pet = results?.data?.pets[0];
 
   if (!pet) {
     throw new Error('No pet found');
